@@ -1,0 +1,53 @@
+---
+description: Turn raw support chat (Slack/thread) into QUESTION/ANSWER KB markdown—strip fluff, extract issue, fixes, workarounds.
+alwaysApply: true
+---
+
+# Support query → Markdown (Launch_queries knowledge base)
+
+When the user provides a **raw support conversation** (paste, export, or thread) and wants a **Markdown file** saved in this repo (or refined), treat that as authoring a **lasting KB entry**. Do **not** mirror the transcript as a diary.
+
+## Remove (noise)
+
+Greetings/closings, scheduling (“DM me”, “sending invite”), thanks-only lines, pings and CC lists, Slack deep links unless they encode unique technical facts, filler (“any luck?”), duplicate restatements of the same point, emoji-only replies, empty “checking this” updates **unless** they add a new finding.
+
+Keep thread order only **where** it resolves ambiguity (e.g. correction then resolution).
+
+## Preserve (signal)
+
+**QUESTION territory:** Stable facts—product (Launch, Edge, OAuth, Next.js-on-Launch, etc.), environment, **symptoms**, reproduction, **URLs/paths/query params**, **HTTP status codes**, timing (Sudden vs after deploy), comparative behavior (production vs local), hypotheses the customer stated.
+
+**ANSWER territory:** Confirmed diagnoses, investigations (what was ruled in/out), **platform-side explanation**, **customer/app-side observations**, known **framework quirks** if mentioned (e.g. Next.js redirects), **workarounds**, config/env checks suggested, ownership (“we’re investigating”), and **resolution status** when stated (resolved, mitigated, open).
+
+If no solid answer exists in the thread, write **ANSWER** as investigation status + verified facts + suggested next checks—do **not** invent conclusions.
+
+## Redact
+
+Replace secrets and high-cardinality IDs with placeholders: tokens, `state`/`code`/`client_secret`-like values—use **`xxxx`** or **`<redacted>`**; shorten long stack traces to one representative line unless every line differs meaningfully.
+
+## Output shape
+
+Use **exactly two top-level headings** so files stay consistent:
+
+```markdown
+QUESTION
+
+<One or two concise paragraphs: problem, scope, facts. No narrator voice.>
+
+ANSWER
+
+<Structured body. Prefer short sections with Markdown **bold** on key terms, bullets for lists.>
+
+```
+
+Optional **ANSWER** subsections (use only what the thread supports), e.g.: **Symptoms**, **Investigation**, **Cause / hypotheses**, **Workarounds**, **Suggested checks**, **Framework / app notes**, **Resolution**.
+
+Match tone and density of existing entries in this folder (professional, runnable as internal KB).
+
+## File naming
+
+Save as **`kebab-case-topic.md`** at repo root unless the user specifies another path (`oauth-preflight-403.md`, `edge-functions-typescript.md`). If the topic already exists, **update that file** or ask whether to supersede vs archive.
+
+## When the paste is ambiguous
+
+Prefer **labeled uncertainty** (“not confirmed in thread”) over guessing. If critical technical fields are missing, list them as **Suggested checks** rather than asserting.
