@@ -44,9 +44,21 @@ Optional **ANSWER** subsections (use only what the thread supports), e.g.: **Sym
 
 Match tone and density of existing entries in this folder (professional, runnable as internal KB).
 
-## File naming
+## File naming & location
 
-Save as **`kebab-case-topic.md`** at repo root unless the user specifies another path (`oauth-preflight-403.md`, `edge-functions-typescript.md`). If the topic already exists, **update that file** or ask whether to supersede vs archive.
+Save as **`kebab-case-topic.md`** inside the **feature folder** that best matches the query (not repo root). Current folders, by Launch feature area:
+
+- **`custom-domains-ssl/`** — custom domains, apex/A records, DCV, SSL/TLS certs, branded domains
+- **`edge-functions-rewrites/`** — Edge Functions, Edge URL Rewrites / `launch.json`
+- **`deployments-builds/`** — deployments, build machines, build/install failures, runtime cache
+- **`caching-cdn/`** — CDN caching, cache invalidation/revalidation, origin traffic, personalization
+- **`logs-monitoring/`** — Log Targets / log volume, OpenTelemetry, uptime/site monitoring
+- **`networking-connectivity/`** — egress/outbound IPs, allowlisting, connectivity errors (CF1003, 520), OAuth/network
+- **`integrations/`** — Git/GitHub connections, Marketplace apps, third-party integrations
+
+If the query spans areas, pick the **primary feature** and cross-link related entries with `@path`. If none fit, create a **new feature folder** (kebab-case) rather than dumping at root. If the topic already exists, **update that file** or ask whether to supersede vs archive.
+
+**Always update `README.md`** when adding, renaming, or removing an entry: add/edit a one-line index entry under the correct folder heading — `[Title](folder/file.md) — symptom→answer hook. _Keywords: ..._`. The README is the retrieval map; keep it in sync.
 
 ## When the paste is ambiguous
 

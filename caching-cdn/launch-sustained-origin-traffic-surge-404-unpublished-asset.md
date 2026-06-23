@@ -57,3 +57,9 @@ Findings / recommendations from Launch:
 ## Status
 
 - Findings communicated to the customer at each stage. Investigation ongoing on attributing the exact external source; recommended next step is the Edge Function block-and-observe plus an audit of integrations/automations. Awaiting further customer data.
+
+### Update — meeting + Edge Function block not yet implemented
+
+- **Customer requested a meeting** to further discuss the API/bandwidth surge and review findings (customer team in **EDT**, IST − 9.5h); a slot was offered for scheduling.
+- **Key follow-up finding:** a **significant volume of requests is still hitting origin** for the image asset `/wp-content/uploads/2024/10/wm_h_pos_clr_rgb_August2024_158x33.jpg`. The earlier recommendation to **block this URL via an Edge Function does not appear to have been implemented yet** — confirmation was requested from the account team.
+- **Takeaway:** the recommended Edge-Function block/observe step is the gating action — until it is actually deployed, the origin traffic for the flagged asset continues, and the external-source attribution can't be conclusively validated. Confirm implementation before treating the recommendation as exhausted.
