@@ -23,6 +23,8 @@ Markdown KB entries distilled from Contentstack **Launch** support conversations
 - [npm E401 "Incorrect or missing password" on install](deployments-builds/launch-build-npm-e401-auth-token-npmrc.md) — private-registry **auth token** missing in build env (works locally via cached creds); fix `.npmrc` + env vars. _Keywords: npm E401, .npmrc, NPM_TOKEN, private registry, fontawesome/GitHub Packages._
 - [Blank pages from `.next/cache` ENOENT on read-only FS](deployments-builds/launch-nextjs-cache-enoent-blank-pages-readonly-fs.md) — `/var/task` is read-only; relocate cache to `/tmp` via `cacheHandlers`. ENOENT ≠ ENOSPC. _Keywords: blank pages, .next/cache, ENOENT, read-only filesystem, cacheHandlers._
 - [Deployment queued/failed + Live Preview not working](deployments-builds/launch-deployment-queued-failed-live-preview-not-working.md) — separate the deploy failure from Live Preview (iframe CORS/CSP); check SSO-only access for support. _Keywords: deployment queued, Live Preview SDK not initialized, CORS/CSP iframe._
+- [Deployment stuck / hangs indefinitely](deployments-builds/launch-deployment-stuck.md) — build command running a **server process** (e.g. `node server.js`) blocks the build step; remove it. Deployments auto-timeout at **60 min**. Standalone Express backend not supported; use Cloud Functions instead. _Keywords: deployment hung, stuck deploy, Express server, SET PORT, build command, timeout._
+- [SPA `NoSuchKey` / 404 on direct URL navigation](deployments-builds/launch-spa-nosuchkey-404.md) — Launch can't fall back to `index.html` for unmatched routes; use **HashRouter** as workaround. SPA preset planned. _Keywords: NoSuchKey, 404, single page app, BrowserRouter, HashRouter, React starter._
 
 ## caching-cdn/ — CDN caching, invalidation, origin traffic, personalization
 
@@ -34,11 +36,18 @@ Markdown KB entries distilled from Contentstack **Launch** support conversations
 - [Estimating Non-Production log volume](logs-monitoring/launch-nonprod-log-volume-estimate-log-targets.md) — Launch can't estimate it (internal format ≠ forwarded, short retention); measure via a **Log Target** in the observability platform. _Keywords: log volume, Log Target, OpenTelemetry, ingestion volume, retention._
 - [Site down "Request URI does not exist" / redirect 404](logs-monitoring/microstrategy-site-down-uri-does-not-exist-redirect-404.md) — customer rebrand/deploy dropped a redirect mapping; not a platform fault; monitor target may need updating. _Keywords: site down, Request URI does not exist, redirect 404, monitor, rebrand._
 
+## cloud-functions/ — Launch Cloud Functions, runtimes, dependencies, routing
+
+- [Node modules / npm dependencies in cloud functions](cloud-functions/launch-cloud-functions-node-modules-dependencies.md) — dependencies via `package.json` **are supported** (Node.js 16 runtime); builds via the **Build command** option; default response cache is `no-cache`, override with `Cache-Control` headers. _Keywords: cloud functions, node_modules, npm, runtime, caching, cache-control._
+- [Cloud functions not supported in monorepos](cloud-functions/launch-cloud-functions-monorepo.md) — **Cloud functions don't work in monorepos**; Next.js API routes (`/api`) are the alternative and do work. Edge functions were not yet supported at time of thread. _Keywords: cloud functions, monorepo, Next.js API routes, edge functions._
+- [Cloud function fails to deploy with long file path (CFLY-510)](cloud-functions/launch-cf-long-path.md) — **bug**: Lambda deploy fails when the function's folder path is too long; workaround is to shorten the path. _Keywords: cloud function deploy failed, long filepath, Lambda, CFLY-510._
+
 ## networking-connectivity/ — egress/outbound IPs, allowlisting, connectivity errors
 
 - [No fixed outbound/egress IPs for allowlisting](networking-connectivity/launch-no-fixed-outbound-egress-ip-allowlist.md) — Launch has **no static egress IPs**; use auth-secured endpoint or a customer proxy/gateway with a static IP. Marketplace App IPs ≠ Launch. _Keywords: outbound IP, egress IP, allowlist, firewall, 403, static IP roadmap._
 - [DELETE method with body → CF1003 / 502](networking-connectivity/launch-delete-method-body-cf1003.md) — Launch **doesn't support a payload on GET/DELETE** (RFC 7231); DELETE+body fails upstream before reaching the handler. Move identifiers to **query params**. _Keywords: CF1003, 502, DELETE with body, upstream rejected, RFC 7231._
 - [Next.js OAuth authorize/state → 520](networking-connectivity/nextjs-oauth-simple-authorize-state-520.md) — **520** = origin didn't return a valid response (not a WAF block, which is 403); extra redirects + `state`/latency in the OAuth chain caused incomplete responses. _Keywords: OAuth, simple-authorize, state param, 520, redirects, slow origin._
+- [Akamai CDN compatibility + CONTENTSTACK_REGION SDK quirk](networking-connectivity/launch-akamai-cdn.md) — Launch works with Akamai (external CDN in front of Launch) with caveats; use region `'us'` not `'NA'` in SDK init—empty string causes invalid CDN hostname. _Keywords: Akamai, external CDN, CONTENTSTACK_REGION, us region, NoSuchKey, CF001._
 
 ## integrations/ — Git/GitHub, Marketplace apps, third-party
 
