@@ -2,6 +2,8 @@ QUESTION
 
 A Next.js app’s OAuth endpoint stopped returning a response: `GET /api/oauth/simple-authorize` with `client_id`, `redirect_uri`, `state`, and `response_type=code` (e.g. on `red-panda-commerce-v2.contentstackapps.com`). The request did not appear to reach the handler. Removing the `state` query parameter made the call succeed, which suggested Launch/Cloudflare interaction. The same routes had worked for ~1–1.5 months with no app-side change; behavior worked when tested locally.
 
+_Keywords: 520 error, OAuth simple-authorize, state param, request not reaching handler, removing state works, extra redirects, worked locally, sudden break no change, Next.js redirects, CF1003, OPTIONS preflight._
+
 ANSWER
 
 **What we observed on the platform**
@@ -21,4 +23,15 @@ ANSWER
 **Remediation and follow-up**
 
 - Verify **OAuth handler** and **dependent services**, especially **`state`** handling, env vars, and config for that API.
-- Internal timeline (examples from the thread): incidents including **CF1003 / standards**, **OPTIONS preflight** (fixed on app side), and **state param delay**—the last was **investigated jointly** (call/scheduling mentioned). Customer reported the **current issue as resolved** after Launch support engagement.
+- Internal timeline (same app, ~11 days): **23 Apr — CF1003** (app code not following web standards); **17 Apr — OPTIONS preflight** not handled properly (**resolved via app fix**); **28 Apr — `state` param delay/not working** (investigated jointly). Customer reported the **current issue as resolved** after Launch support engagement.
+
+**Pattern note — "sudden breaks, no changes from our side"**
+
+- The customer flagged **three sudden issues in ~a week** on the same app, all "working for months then suddenly broke." Important framing: the **first two were resolved by application-code fixes** (CF1003 standards compliance, OPTIONS preflight handling), so a "nothing changed on our side" report does **not** rule out an app-side cause — platform/edge behavior can surface latent app issues (non-standard requests, redirect chains, slow downstream calls) that previously happened to pass.
+- A **520 (not 403)** is the key signal that this is **origin not completing a valid response** (timeout/redirect-chain/latency), **not** a new Cloudflare WAF/rule block.
+
+## Generalized guidance (for future similar queries)
+
+- **"OAuth/API request returns 520 / doesn't reach the handler; removing `state` (or another param) makes it work"** → 520 = **origin didn't return a valid response** (timeout/reset/incomplete), not a WAF block (that'd be 403). Look at the **handler + downstream auth/session** latency and **redirect chains**, not new Cloudflare rules.
+- **"It worked for months with no changes"** → not proof it's platform-side; on this app the prior two such incidents were **app-code fixes** (CF1003, OPTIONS). Check standards compliance, redirect count, env/config, and slow dependencies.
+- **Recurring sudden issues on one app** → review for a common app-side root (non-standard HTTP behavior, extra redirects, latency) before attributing to Launch/Cloudflare; offer a joint call to debug live.
